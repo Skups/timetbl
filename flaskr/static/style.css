@@ -1,23 +1,24 @@
 html {
     font-family: sans-serif;
-    background: #eee;
+    background: #f1ece4;
     padding: 1rem;
 }
 
 body {
     max-width: 960px;
     margin: 0 auto;
-    background: white;
+    background: rgb(255, 246, 220);
+    border-radius: 20px;
 }
 
 h1 {
     font-family: serif;
-    color: #377ba8;
+    color: #3d1c0e;
     margin: 1rem 0;
 }
 
 a {
-    color: #377ba8;
+    color: #3d1c0e;
 }
 
 hr {
@@ -26,10 +27,12 @@ hr {
 }
 
 nav {
-    background: lightgray;
+    background: rgb(204, 192, 170);
     display: flex;
     align-items: center;
     padding: 0 0.5rem;
+    border-radius: 20px;
+
 }
 
 nav h1 {
@@ -74,8 +77,8 @@ header .action {
 .flash {
     margin: 1em 0;
     padding: 1em;
-    background: #cae6f6;
-    border: 1px solid #377ba8;
+    background: #f6cfca;
+    border: 1px solid #3d1c0e;
 }
 
 .post>header {
@@ -134,4 +137,32 @@ input.danger {
 input[type=submit] {
     align-self: start;
     min-width: 10em;
+}
+
+/* CUSTOM CHECKBOX */
+input[type="checkbox"] {
+    /* -webkit-appearance: none; */
+    appearance: none;
+    background-color: #967e73;
+    margin: 0;
+    
+    width: 100%;
+    height: 80px;
+}
+
+input[type="checkbox"]:hover {
+    background-color: #b19d93;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #795342;
+}
+
+td {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    flex: auto;
 }

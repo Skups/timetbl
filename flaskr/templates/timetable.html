@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Vyberte si hodiny{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form id="timetable" method="post">
+    <table>
+        <!-- <tr>
+                {% for class in range(classes|length) %}
+                <th>{{ class }}</th>
+                {% endfor %}
+            </tr> -->
+        <tr>
+            {% for class in classes %}
+            <th>{{ class }}</th>
+            {% endfor %}
+        </tr>
+        {% for day in range(days) %}
+        <tr>
+            {% for class in range(classes|length) %}
+            <td class="container">
+                <input type="checkbox" name="option" value="{{ day }},{{ class }}"><span class="checkmark"></span>
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+    <label for="name">Meno</label>
+    <input name="name" id="name" required>
+    <label for="surname">Priezvisko</label>
+    <input name="surname" id="surname" required>
+    <button type="submit">Potvrdiť</button>
+</form>
+
+<script>
+    document.getElementById('timetable').addEventListener('submit', function (event) {
+        const checkboxes = document.querySelectorAll('input[name="option"]:checked');
+        if (checkboxes.length !== 2) {
+            event.preventDefault();
+            alert('You must select exactly two options.');
+        }
+    });
+</script>
+
+{% endblock %}

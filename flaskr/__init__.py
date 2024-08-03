@@ -27,9 +27,8 @@ def create_app(test_config=None):
 
     from . import welcome
     app.register_blueprint(welcome.bp)
-
-    @app.route("/")
-    def default_redirect():
-        return app.redirect(url_for("home"))
+    
+    from . import timetable
+    app.register_blueprint(timetable.bp)
     
     return app

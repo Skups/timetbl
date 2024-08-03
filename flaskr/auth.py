@@ -26,10 +26,19 @@ def register():
             error = "Password is required."
             
         if error is None:
+            
             try:
                 with db.cursor() as cur:
-                    cur.execute("INSERT INTO teacher (name, password) VALUES (?, ?)", (username, generate_password_hash(password)))
-                db.commit()
+                    is_name_taken = cur.execute("SELECT * FROM teacher WHERE username = (%s)", (username,)).fetchall()
+                    # print(is_name_taken)
+                    if is_name_taken is None:
+                        cur.execute("INSERT INTO teacher (username, password) VALUES (%s, %s)", (username, generate_password_hash(password)))
+                        db.commit()
+                    else:
+                        error = f"User {username} is already registered."
+                        flash(error)
+                        return render_template("auth/register.html")
+                        
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
@@ -50,7 +59,7 @@ def login():
 
         with db.cursor(row_factory=dict_row) as cur:
             user = cur.execute(
-                "SELECT * FROM teacher WHERE username = ?", (in_username,)
+                "SELECT * FROM teacher WHERE username = %s", (in_username,)
             ).fetchone()
 
         if user is None:
@@ -62,7 +71,7 @@ def login():
             session.clear()
             assert user is not None
             session["user_id"] = user["id"]
-            return redirect(url_for("index"))
+            return redirect(url_for("welcome.welcome"))
         
         flash(error)
 
@@ -77,14 +86,14 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_database().execute(
-            "SELECT * FROM user WHERE id = ?", (user_id,)
+            "SELECT * FROM teacher WHERE id = %s", (user_id,)
         ).fetchone()
 
 
 @bp.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("index"))
+    return redirect(url_for("auth.login"))
 
 
 def login_required(view):

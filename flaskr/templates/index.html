@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Zdravim vas{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<!-- <h3>Kód</h3> -->
+<form method="post">
+    <label for="code">Kód</label>
+    <input name="code" id="code" required>
+    <!-- <label for="name">Meno</label>
+    <input name="name" id="name" required>
+    <label for="surname">Priezvisko</label>
+    <input name="surname" id="surname" required> -->
+    <input type="submit" value="Pokračovať">
+</form>
+{% endblock %}
