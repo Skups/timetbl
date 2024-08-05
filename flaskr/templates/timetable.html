@@ -6,33 +6,34 @@
 
 {% block content %}
 <form id="timetable" method="post">
+
     <table>
-        <!-- <tr>
-                {% for class in range(classes|length) %}
+        <thead>
+            <tr>
+                <th>Deň</th>
+                {% for class in classes %}
                 <th>{{ class }}</th>
                 {% endfor %}
-            </tr> -->
+            </tr>
+        </thead>
+        {% for day in range(days|length) %}
         <tr>
-            {% for class in classes %}
-            <th>{{ class }}</th>
-            {% endfor %}
-        </tr>
-        {% for day in range(days) %}
-        <tr>
+            <th>{{days_of_week[day]}}</th>
             {% for class in range(classes|length) %}
             <td class="container">
-                <input type="checkbox" name="option" value="{{ day }},{{ class }}"><span class="checkmark"></span>
+                <input class="timetable" type="checkbox" name="option" value="{{ day }},{{ class }}">
             </td>
             {% endfor %}
         </tr>
         {% endfor %}
 
     </table>
+    <br>
     <label for="name">Meno</label>
     <input name="name" id="name" required>
     <label for="surname">Priezvisko</label>
     <input name="surname" id="surname" required>
-    <button type="submit">Potvrdiť</button>
+    <input type="submit" value="Potvrdiť">
 </form>
 
 <script>

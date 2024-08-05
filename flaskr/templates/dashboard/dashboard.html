@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Dashboard{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<br>
+<h3><a href="{{ url_for('dashboard.new_timetable') }}">+ Novy rozvrh</a>
+<br>
+
+{% for timetable in timetables %}
+<h2>{{ timetable["name"] }}</h2>
+    {% for class in range(timetable["classes"]|length) %}
+    <p>{{ class }}</p>
+    {% endfor %}
+{% endfor %}
+
+{% endblock %}

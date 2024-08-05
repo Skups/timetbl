@@ -24,28 +24,27 @@ def register():
             error = "Username is required."
         elif not password:
             error = "Password is required."
-            
+
         if error is None:
-            
+
             try:
                 with db.cursor() as cur:
                     is_name_taken = cur.execute("SELECT * FROM teacher WHERE username = (%s)", (username,)).fetchall()
-                    # print(is_name_taken)
-                    if is_name_taken is None:
+                    if is_name_taken == []:
                         cur.execute("INSERT INTO teacher (username, password) VALUES (%s, %s)", (username, generate_password_hash(password)))
                         db.commit()
                     else:
                         error = f"User {username} is already registered."
                         flash(error)
                         return render_template("auth/register.html")
-                        
+
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return redirect(url_for("auth.login"))
-            
+                return redirect(url_for("dashboard.dashboard"))
+
         flash(error)
-    
+
     return render_template("auth/register.html")
 
 
@@ -71,8 +70,8 @@ def login():
             session.clear()
             assert user is not None
             session["user_id"] = user["id"]
-            return redirect(url_for("welcome.welcome"))
-        
+            return redirect(url_for("dashboard.dashboard"))
+
         flash(error)
 
     return render_template("/auth/login.html")
@@ -101,8 +100,8 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for("auth.login"))
-        
+
         return view(**kwargs)
-    
+
     return wrapped_view
 

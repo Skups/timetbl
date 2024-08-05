@@ -13,12 +13,6 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    
     from . import database
     database.init_app(app)
 
@@ -27,8 +21,11 @@ def create_app(test_config=None):
 
     from . import welcome
     app.register_blueprint(welcome.bp)
-    
+
     from . import timetable
     app.register_blueprint(timetable.bp)
-    
+
+    from . import dashboard
+    app.register_blueprint(dashboard.bp)
+
     return app

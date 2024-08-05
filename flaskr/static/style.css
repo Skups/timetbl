@@ -18,7 +18,13 @@ h1 {
 }
 
 a {
-    color: #3d1c0e;
+    color: #5c1f05;
+    text-decoration: none;
+}
+
+a:hover {
+    background: #e8dfdb;
+    border-radius: 10px;
 }
 
 hr {
@@ -120,7 +126,6 @@ header .action {
     margin-bottom: 0.5em;
 }
 
-.content input,
 .content textarea {
     margin-bottom: 1em;
 }
@@ -140,29 +145,69 @@ input[type=submit] {
 }
 
 /* CUSTOM CHECKBOX */
-input[type="checkbox"] {
+.timetable input[type="checkbox"] {
     /* -webkit-appearance: none; */
     appearance: none;
-    background-color: #967e73;
+    /* background-color: #967e73; */
     margin: 0;
-    
-    width: 100%;
+
+    width: 40%;
     height: 80px;
 }
 
-input[type="checkbox"]:hover {
+.timetable input[type="checkbox"]:hover {
     background-color: #b19d93;
+
 }
 
-input[type="checkbox"]:checked {
+.timetable input[type="checkbox"]:checked {
     background-color: #795342;
 }
 
-td {
-    text-align: center;
+table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140 140 140);
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
 }
+
+caption {
+    caption-side: bottom;
+    padding: 10px;
+    font-weight: bold;
+}
+
+thead,
+tfoot {
+    background-color: rgb(255, 215, 189);
+}
+
+th,
+td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
+
+}
+
+tbody>tr:nth-of-type(even) {
+    background-color: rgb(247, 240, 230);
+}
+
+
+tfoot td {
+    font-weight: bold;
+}
+
 
 .row {
     display: flex;
     flex: auto;
+}
+
+td>input {
+    vertical-align: middle;
+    box-shadow: none;
+    font-family: sans-serif;
+    font-size: 0.8rem;
 }

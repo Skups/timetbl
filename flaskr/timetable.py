@@ -6,8 +6,8 @@ from flaskr.database import get_database
 
 bp = Blueprint("timetable", __name__)
 
-@bp.route("/timetable/<int:code>", methods=("GET", "POST"))
-def timetable(code):
+@bp.route("/timetable/<string:code>", methods=("GET", "POST"))
+def timetable(code: str):
     if request.method == "POST":
         name = request.form["name"]
         surname = request.form["surname"]
@@ -18,10 +18,10 @@ def timetable(code):
             error = "Surname is required"
 
 
-    days = 5
 
     # TODO
-    # classes will be an array of tuples (start_time, is_registered)
+    # classes will be an array of tuples from database (start_time, is_registered)
     classes = ["13:15","13:50","14:25","15:00", "15:35", "16:15", "16:50", "17:25"]
+    days = ["Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok"]
 
     return render_template("timetable.html", code=code, days=days, classes=classes)
