@@ -14,18 +14,15 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     from . import database
+    from . import auth
+    from . import welcome
+    from . import dashboard
+    from . import timetable
     database.init_app(app)
 
-    from . import auth
     app.register_blueprint(auth.bp)
-
-    from . import welcome
     app.register_blueprint(welcome.bp)
-
-    from . import timetable
-    app.register_blueprint(timetable.bp)
-
-    from . import dashboard
     app.register_blueprint(dashboard.bp)
+    app.register_blueprint(timetable.bp)
 
     return app

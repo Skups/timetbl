@@ -8,54 +8,58 @@
 
 <form method="post">
 
-    {% for day in range(7) %}
-    <div id="classDaySelector">
-        {% if day < 5 %} <input type="checkbox" id="classDay" name="{{ day }}" checked>
-            {% else %}
-            <input type="checkbox" id="classDay" name="{{ day }}">
-            {% endif %}
-            <label>{{ days_of_week[day] }}</label>
-    </div>
-    {% endfor %}
+    <label>
+        Názov rozvrhu
+        <input type="text" name="timetableName" required>
+    </label>
+
+    <table>
+        <thead id="timetableColumns">
+            <tr id="timetableHead">
+                <th>Deň</th>
+                <td>
+                    <button id="addClassesButton" type="button">+</button>
+                    <button id="removeClassesButton" type="button">-</button>
+                </td>
+            </tr>
+        </thead>
+        <tbody id="timetableRows">
+
+        </tbody>
+
+    </table>
 
     <input type="submit" value="Potvrdiť">
 </form>
 
-<table>
-    <thead id="timetableColumns">
-        <tr id="timetableHead">
-            <th>Deň</th>
-            <td></td>
-        </tr>
-    </thead>
-    <tbody id="timetableRows">
-
-    </tbody>
-
-</table>
-
-<template id="classTemplate">
-    <td id="class">
+<template id="columnTemplate">
+    <td id="column">
         <input id="timeInput" type="time">
     </td>
 </template>
 
-<template id="timetableRowTemplate">
-        <tr id="timetableRow">
-            <th id="timetableRowDayLabel"></th>
+<template id="classTemplate">
+    <td id="class">
+        <input id="timeInput" type="time" required>
+    </td>
+</template>
 
-            <td>
-                <button id="addClassButton">+</button>
-                <button id="removeClassButton">-</button>
-            </td>
-        </tr>
+<template id="timetableRowTemplate">
+    <tr id="timetableRow">
+        <th id="timetableRowDayLabel"></th>
+
+        <td>
+            <button id="addClassButton" type="button">+</button>
+            <button id="removeClassButton" type="button">-</button>
+        </td>
+    </tr>
 </template>
 
 <script>
     const days_of_week = JSON.parse('{{ days_of_week|tojson|safe }}')
     var column_count = 0;
     var column_desired_count = 4;
-    var timetable_columns = [4,4,4,4,4,0,0];
+    var timetable_columns = [4, 4, 4, 4, 4];
 
     function createRow(day) {
         const elem = document.querySelector('#timetableRowTemplate');
@@ -71,31 +75,32 @@
     function createClass(day, i) {
         const elem = document.querySelector('#classTemplate');
         const new_class = elem.content.cloneNode(true);
-        new_class.querySelector('#class').id = day+'class'+i;
-        new_class.querySelector('#timeInput').id = day+'timeInput'+i;
+        new_class.querySelector('#class').id = day + 'class' + i;
+        new_class.querySelector('#timeInput').name = day + 'timeInput' + i;
+        new_class.querySelector('#timeInput').id = day + 'timeInput' + i;
         document.getElementById('timetableRow' + day).appendChild(new_class);
     };
 
     function removeClass(day, i) {
-        const child = document.getElementById(day+'class'+i);
+        const child = document.getElementById(day + 'class' + i);
         document.getElementById('timetableRow' + day).removeChild(child);
     };
 
     function setColumnInputTime(i) {
-        let time = document.getElementById('columnTimeInput'+i).value;
-            for (let d = 0; d < 7; d++) {
-                let time_input = document.getElementById(d+'timeInput'+i);
-                if (time_input != null)
-                    time_input.value = time;
-            }
+        let time = document.getElementById('columnTimeInput' + i).value;
+        for (let d = 0; d < 5; d++) {
+            let time_input = document.getElementById(d + 'timeInput' + i);
+            if (time_input != null)
+                time_input.value = time;
+        }
     };
 
     function addColumn(i) {
-        const elem = document.querySelector('#classTemplate');
+        const elem = document.querySelector('#columnTemplate');
         const new_col = elem.content.cloneNode(true);
-        new_col.querySelector('#class').id = 'column' + i;
-        new_col.querySelector('#timeInput').id = 'columnTimeInput'+i;
-        new_col.querySelector('#columnTimeInput'+i).addEventListener('input', function() {
+        new_col.querySelector('#column').id = 'column' + i;
+        new_col.querySelector('#timeInput').id = 'columnTimeInput' + i;
+        new_col.querySelector('#columnTimeInput' + i).addEventListener('input', function () {
             setColumnInputTime(i);
         });
         document.getElementById('timetableHead').appendChild(new_col);
@@ -127,28 +132,40 @@
             column_desired_count += x;
     };
 
-    const daysCheckboxes = document.querySelectorAll('#classDaySelector input[type="checkbox"]')
-    daysCheckboxes.forEach(checkbox => {
-        let day_i = checkbox.name;
-        if (checkbox.checked) {
-            createRow(day_i)
+    for (let day_i = 0; day_i < 5; day_i++) {
+        createRow(day_i)
 
-            for (let i = 0; i < 4; i++) {
-                createClass(day_i, i);
-            }
-            document.getElementById('addClassButton'+day_i).addEventListener('click', function() {
-                createClass(day_i, timetable_columns[day_i])
-                changeColCount(day_i, 1);
+        for (let i = 0; i < 4; i++) {
+            createClass(day_i, i);
+        }
+        document.getElementById('addClassButton' + day_i).addEventListener('click', function () {
+            createClass(day_i, timetable_columns[day_i])
+            changeColCount(day_i, 1);
+            fixColumns();
+        })
+        document.getElementById('removeClassButton' + day_i).addEventListener('click', function () {
+            if (timetable_columns[day_i] > 0) {
+                changeColCount(day_i, -1);
+                removeClass(day_i, timetable_columns[day_i])
                 fixColumns();
-            })
-            document.getElementById('removeClassButton'+day_i).addEventListener('click', function() {
-                if (timetable_columns[day_i] > 0) {
-                    changeColCount(day_i, -1);
-                    removeClass(day_i, timetable_columns[day_i])
-                    fixColumns();
-                }
-            })
-        };
+            }
+        })
+    };
+
+    document.getElementById('addClassesButton').addEventListener('click', function () {
+        for (let i = 0; i < 5; i++) {
+            createClass(i, timetable_columns[i]);
+            changeColCount(i, 1);
+            fixColumns();
+        }
+    });
+
+    document.getElementById('removeClassesButton').addEventListener('click', function () {
+        for (let i = 0; i < 5; i++) {
+            changeColCount(i, -1);
+            removeClass(i, timetable_columns[i]);
+            fixColumns();
+        }
     });
 
     fixColumns();

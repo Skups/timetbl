@@ -11,38 +11,61 @@
         <thead>
             <tr>
                 <th>Deň</th>
-                {% for class in classes %}
-                <th>{{ class }}</th>
+                {% for _ in range(timetable[2]+1) %}
+                <th>{{loop.index}}</th>
                 {% endfor %}
             </tr>
         </thead>
-        {% for day in range(days|length) %}
-        <tr>
-            <th>{{days_of_week[day]}}</th>
-            {% for class in range(classes|length) %}
-            <td class="container">
-                <input class="timetable" type="checkbox" name="option" value="{{ day }},{{ class }}">
-            </td>
+        <tbody>
+            {% for row in timetable[3] %}
+            {% set day = loop.index0 %}
+            <tr>
+                <th>{{days_of_week[loop.index-1]}}</th>
+                {% for class in row %}
+                <td>
+                    {{ class.time }}
+                    {% if class.time %}
+                    <input type="checkbox" id="option" name="{{ day }},{{ loop.index0 }}" class="{{day}} {{loop.index0}}">
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-        {% endfor %}
-
+        </tbody>
     </table>
+
     <br>
-    <label for="name">Meno</label>
+    <p>Meno</p>
     <input name="name" id="name" required>
-    <label for="surname">Priezvisko</label>
+    <br>
+    <p>Priezvisko</p>
     <input name="surname" id="surname" required>
+    <br>
+    <br>
+    <br>
     <input type="submit" value="Potvrdiť">
 </form>
 
 <script>
-    document.getElementById('timetable').addEventListener('submit', function (event) {
-        const checkboxes = document.querySelectorAll('input[name="option"]:checked');
+    function isSelectionCorrect(checkboxes) {
         if (checkboxes.length !== 2) {
             event.preventDefault();
             alert('You must select exactly two options.');
         }
+        let days_selected = [];
+        checkboxes.forEach((class_selected) => {
+            if (days_selected.includes(class_selected.classList[0])) {
+                event.preventDefault();
+                alert('Len jedna hodina denne.');
+            }
+            days_selected.push(class_selected.classList[0]);
+        })
+    }
+
+    document.getElementById('timetable').addEventListener('submit', function (event) {
+        const checkboxes = document.querySelectorAll('input[id="option"]:checked');
+        isSelectionCorrect(checkboxes)
+
     });
 </script>
 

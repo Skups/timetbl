@@ -5,15 +5,43 @@
 {% endblock %}
 
 {% block content %}
-<br>
 <h3><a href="{{ url_for('dashboard.new_timetable') }}">+ Novy rozvrh</a>
-<br>
+    {% for timetable in timetables %}
+    <div>
+        <ul>
+            <h2>{{ timetable[0] }}</h2>
+            <h2>{{ timetable[1] }}</h2>
+            <h3><a href="{{ url_for('dashboard.delete_timetable', id=timetable[1]) }}">zmazat</a>
+        </ul>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th>Deň</th>
+                    {% for _ in range(timetable[2]+1) %}
+                    <th>{{loop.index}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in timetable[3] %}
+                <tr>
+                    <th>{{days_of_week[loop.index-1]}}</th>
+                    {% for class in row %}
+                    <td>
+                        {{ class.time }}
+                        <br>
+                        {{ class.student_id }}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-{% for timetable in timetables %}
-<h2>{{ timetable["name"] }}</h2>
-    {% for class in range(timetable["classes"]|length) %}
-    <p>{{ class }}</p>
+    <br>
+    <br>
     {% endfor %}
-{% endfor %}
 
-{% endblock %}
+    {% endblock %}
